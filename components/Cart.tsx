@@ -3,15 +3,15 @@ import React, { useState } from "react";
 import { Container, Stack } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { openCart } from "../redux/cartSlice";
-import { openModal } from "../redux/paymentModalSlice";
-import { useAppDispatch, useAppSelector } from "../hooks/redux.hook";
-import MyContainer from "./MyContainer";
+import { toggleCartModal } from "@/redux/cartSlice";
+import { togglePaymentModal } from "@/redux/paymentModalSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hook";
+import MyContainer from "@/components/MyContainer";
 
 export default function Cart() {
   const dispatch = useAppDispatch();
 
-  const handleClose = () => dispatch(openCart(false));
+  const handleClose = () => dispatch(toggleCartModal(false));
 
   const isCartOpen = useAppSelector((state) => state.cart.isCartOpen);
   const productsInCart = useAppSelector((state) => state.cart.productsInCart);
@@ -53,7 +53,9 @@ export default function Cart() {
               Total:<span className="text-secondary">{total}</span>
             </div>
             {total > 0 && (
-              <Button onClick={() => dispatch(openModal(true))}>Pay</Button>
+              <Button onClick={() => dispatch(togglePaymentModal(true))}>
+                Pay
+              </Button>
             )}
           </Stack>
         </Offcanvas.Body>

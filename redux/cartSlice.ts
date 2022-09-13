@@ -43,7 +43,7 @@ export const cartSlice = createSlice({
       }
     },
 
-    openCart: (state, action: PayloadAction<boolean>) => {
+    toggleCartModal: (state, action: PayloadAction<boolean>) => {
       state.isCartOpen = action.payload;
     },
   },
@@ -56,7 +56,7 @@ function calculateTotal(products: Product[]) {
   );
 }
 
-export const { addItemToCart, deleteItemFromCart, openCart } =
+export const { addItemToCart, deleteItemFromCart, toggleCartModal } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

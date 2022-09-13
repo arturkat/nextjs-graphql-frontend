@@ -3,16 +3,15 @@ import type { AppProps, NextWebVitalsMetric } from "next/app";
 import { Provider as ReduxProvider } from "react-redux";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import NextNProgress from "nextjs-progressbar";
-import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
-import { store } from "../redux/store";
-import Layout from "../components/Layout";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
-import MyNavbar from "../components/MyNavbar";
-import Cart from "../components/Cart";
-import MyFooter from "../components/MyFooter";
-import { animations } from "../lib/animations";
+import { store } from "@/redux/store";
+import MyNavbar from "@/components/MyNavbar";
+import Cart from "@/components/Cart";
+import MyFooter from "@/components/MyFooter";
+import MyTransition from "@/components/MyTransition";
+import MultiStepModal from "@/components/payment/MultiStepModal";
 
 export const apolloClient = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -40,7 +39,6 @@ export function reportWebVitals({
 
 function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
   const url = `https://localhost:3000${router.route}`;
-  const activeAnimation = animations[0];
 
   useEffect(() => {
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -57,6 +55,9 @@ function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
 
   return (
     <>
+      {/*{console.log("canonical url = ", url)}*/}
+      {/*{console.log("router.route = ", router.route)}*/}
+
       <Head>
         <link rel="icon" href="/favicon.jpg" type="image/png" />
       </Head>
@@ -85,28 +86,15 @@ function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
             options={{ easing: "ease", speed: 500 }}
           />
           <MyNavbar />
-
-          <LazyMotion features={domAnimation}>
-            <AnimatePresence
-              mode="wait"
-              onExitComplete={() => window.scrollTo(0, 0)}
-              // initial={false}
-            >
-              <m.div
-                key={router.route.concat(activeAnimation.name)}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                variants={activeAnimation.variants}
-                transition={activeAnimation.transition}
-              >
-                <Component {...pageProps} canonical={url} key={url} />
-              </m.div>
-            </AnimatePresence>
-          </LazyMotion>
-
+          <MultiStepModal />
           <Cart />
-          <MyFooter />
+
+          <MyTransition>
+            <>
+              <Component {...pageProps} canonical={url} key={url} />
+              <MyFooter />
+            </>
+          </MyTransition>
         </ApolloProvider>
       </ReduxProvider>
     </>

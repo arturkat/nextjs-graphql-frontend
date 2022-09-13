@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import type { NextPage } from "next";
-import ProductListItem from "../components/ProductListItem";
-import { getAllProducts } from "../graphql/getAllProducts.query";
-import { GetAllProductsQuery } from "../graphql/types";
+import ProductListItem from "@/components/ProductListItem";
+import { getAllProducts } from "@/graphql/getAllProducts.query";
+import { GetAllProductsQuery } from "@/graphql/types";
 import { Col, Container, Row } from "react-bootstrap";
 
 const productMock = {
@@ -33,7 +33,6 @@ const ProductList: NextPage = () => {
           </Col>
         ))}
       </Row>
-
       <Row>
         <Col key={productMock.id} sm={6} md={4} lg={3} className={"mb-4"}>
           <ProductListItem product={productMock} />

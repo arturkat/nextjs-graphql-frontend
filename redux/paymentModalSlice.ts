@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState = {
-  openMultiStepModal: false,
+  isOpenMultiStepModal: false,
 };
 
 const paymentModalSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<boolean>) => {
-      state.openMultiStepModal = action.payload;
+    togglePaymentModal: (state, action: PayloadAction<boolean>) => {
+      state.isOpenMultiStepModal = action.payload;
     },
   },
 });
 
-export const { openModal } = paymentModalSlice.actions;
+export const { togglePaymentModal } = paymentModalSlice.actions;
 export const paymentReducer = paymentModalSlice.reducer;

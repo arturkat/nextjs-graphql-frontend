@@ -110,4 +110,4 @@ const rotateZ = {
   },
 };
 
-export const animations = [slideUp, fadeBack, rotateX, rotateY, rotateZ];
+export const animations = { slideUp, fadeBack, rotateX, rotateY, rotateZ };

@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "../hooks/redux.hook";
-import { openCart } from "../redux/cartSlice";
-import MyContainer from "./MyContainer";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hook";
+import { toggleCartModal } from "@/redux/cartSlice";
+import MyContainer from "@/components/MyContainer";
 
 const MyNavbar = (props: any) => {
   const productsInCart = useAppSelector((state) => state.cart.productsInCart);
@@ -28,7 +28,7 @@ const MyNavbar = (props: any) => {
             <Nav.Link>About</Nav.Link>
           </Link>
 
-          <Nav.Link onClick={() => dispatch(openCart(!isCartOpen))}>
+          <Nav.Link onClick={() => dispatch(toggleCartModal(!isCartOpen))}>
             <i className="fa-solid fa-cart-shopping me-1"></i>
             <span className="me-2">Cart</span>
             <span className="bg-danger text-center text-white rounded-pill px-2 py-1 ml-2">
