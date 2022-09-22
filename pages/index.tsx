@@ -1,12 +1,14 @@
 import type { NextPage } from "next";
 import ProductList from "@/components/ProductList";
-import Layout from "@/components/Layout";
+import MyLayout from "@/components/MyLayout";
+import React from "react";
 
 const Home: NextPage = () => {
   return (
-    <Layout>
+    <MyLayout>
+      <h1>Products</h1>
       <ProductList />
-    </Layout>
+    </MyLayout>
   );
 };
 

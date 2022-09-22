@@ -3,7 +3,7 @@ const slideUp = {
   variants: {
     initial: {
       x: 0,
-      y: -100,
+      y: -50,
       opacity: 0,
       scale: 0.98,
     },
@@ -15,13 +15,13 @@ const slideUp = {
     },
     exit: {
       x: 0,
-      y: 100,
+      y: 50,
       opacity: 0,
-      scale: 0.98,
+      scale: 0.95,
     },
   },
   transition: {
-    duration: 0.3,
+    duration: 0.35,
     ease: "easeInOut",
   },
 };

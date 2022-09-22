@@ -3,7 +3,7 @@ import { NextSeo } from "next-seo";
 import MyContainer from "@/components/MyContainer";
 import MyFooter from "@/components/MyFooter";
 
-const Layout = ({
+const MyLayout = ({
   children,
   title,
   description,
@@ -26,4 +26,4 @@ const Layout = ({
   );
 };
 
-export default Layout;
+export default MyLayout;

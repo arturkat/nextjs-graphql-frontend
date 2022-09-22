@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps, NextWebVitalsMetric } from "next/app";
 import { Provider as ReduxProvider } from "react-redux";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import NextNProgress from "nextjs-progressbar";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
@@ -12,11 +12,8 @@ import Cart from "@/components/Cart";
 import MyFooter from "@/components/MyFooter";
 import MyTransition from "@/components/MyTransition";
 import MultiStepModal from "@/components/payment/MultiStepModal";
-
-export const apolloClient = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
-  cache: new InMemoryCache(),
-});
+import Toaster from "@/components/feature/Toaster";
+import apolloClient from "@/http/apollo";
 
 declare const window: any;
 
@@ -95,6 +92,7 @@ function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
               <MyFooter />
             </>
           </MyTransition>
+          <Toaster />
         </ApolloProvider>
       </ReduxProvider>
     </>

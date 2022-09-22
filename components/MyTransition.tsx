@@ -1,5 +1,11 @@
 import React, { ReactNode } from "react";
-import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
+import {
+  AnimatePresence,
+  domAnimation,
+  LazyMotion,
+  m,
+  motion,
+} from "framer-motion";
 import { useRouter } from "next/router";
 import { animations } from "@/lib/animations";
 
@@ -18,23 +24,21 @@ const MyTransition = (props: Props) => {
 
   return (
     <>
-      <LazyMotion features={domAnimation}>
-        <AnimatePresence
-          mode="wait"
-          onExitComplete={() => window.scrollTo(0, 0)}
+      {/*<LazyMotion features={domAnimation}>*/}
+      <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
+        <motion.div
+          key={mKey}
+          layout
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={animations.slideUp.variants}
+          transition={animations.slideUp.transition}
         >
-          <m.div
-            key={mKey}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={animations.slideUp.variants}
-            transition={animations.slideUp.transition}
-          >
-            {props.children}
-          </m.div>
-        </AnimatePresence>
-      </LazyMotion>
+          {props.children}
+        </motion.div>
+      </AnimatePresence>
+      {/*</LazyMotion>*/}
     </>
   );
 };

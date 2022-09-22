@@ -1,9 +1,11 @@
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import type { NextPage } from "next";
 import ProductListItem from "@/components/ProductListItem";
 import { getAllProducts } from "@/graphql/getAllProducts.query";
-import { GetAllProductsQuery } from "@/graphql/types";
+import { GetAllProductsQuery, GetProductByIdQuery } from "@/graphql/types";
 import { Col, Container, Row } from "react-bootstrap";
+import apolloClient from "@/http/apollo";
+import { useEffect, useState } from "react";
 
 const productMock = {
   id: 100,
@@ -23,17 +25,32 @@ const productMock = {
 };
 
 const ProductList: NextPage = () => {
-  const { data } = useQuery<GetAllProductsQuery>(getAllProducts);
+  let [result, setResult] =
+    useState<ApolloQueryResult<GetAllProductsQuery> | null>(null);
+
+  useEffect(() => {
+    async function loadProducts() {
+      const res = await apolloClient.query<GetAllProductsQuery>({
+        query: getAllProducts,
+      });
+      setResult(res);
+      // console.log("useEffect ProductList ", result);
+    }
+    loadProducts();
+  }, []);
+
+  if (!result) {
+    return <h1 className={"text-center"}>Loading...</h1>;
+  }
+
   return (
     <div className={"mt-4"}>
       <Row>
-        {data?.products.map((product) => (
+        {result.data?.products.map((product) => (
           <Col key={product.id} sm={6} md={4} lg={3} className={"mb-4"}>
             <ProductListItem product={product} />
           </Col>
         ))}
-      </Row>
-      <Row>
         <Col key={productMock.id} sm={6} md={4} lg={3} className={"mb-4"}>
           <ProductListItem product={productMock} />
         </Col>

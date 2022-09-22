@@ -14,4 +14,4 @@ const paymentModalSlice = createSlice({
 });
 
 export const { togglePaymentModal } = paymentModalSlice.actions;
-export const paymentReducer = paymentModalSlice.reducer;
+export default paymentModalSlice.reducer;

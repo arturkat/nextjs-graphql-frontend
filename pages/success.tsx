@@ -1,11 +1,11 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
-import Layout from "@/components/Layout";
+import MyLayout from "@/components/MyLayout";
 
 export default function success() {
   return (
-    <Layout>
+    <MyLayout>
       <Alert variant="success">Your Payment was successful</Alert>
-    </Layout>
+    </MyLayout>
   );
 }

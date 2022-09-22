@@ -1,10 +1,12 @@
 import React from "react";
-import Layout from "@/components/Layout";
+import MyLayout from "@/components/MyLayout";
+import ProductList from "@/components/ProductList";
+import ProductCard from "@/components/ProductCard";
 
 const Contacts = () => {
   return (
     <>
-      <Layout>
+      <MyLayout>
         <h1>Contacts</h1>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores
@@ -18,7 +20,10 @@ const Contacts = () => {
           neque odit perspiciatis quae quis quos ratione repellendus saepe
           velit.
         </p>
-      </Layout>
+        <ProductCard id={1} />
+        {/*<ProductCard id={2} />*/}
+        {/*<ProductCard id={3} />*/}
+      </MyLayout>
     </>
   );
 };

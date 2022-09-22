@@ -7,24 +7,32 @@ import {
   Product,
 } from "@/graphql/types";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hook";
-import { apolloClient } from "../_app";
 import { Button, Card, Stack } from "react-bootstrap";
-import { addItemToCart, deleteItemFromCart } from "../../redux/cartSlice";
-import { getAllProducts } from "../../graphql/getAllProducts.query";
-import { getProductById } from "../../graphql/getProductById.query";
+import { addItemToCart, deleteItemFromCart } from "@/redux/cartSlice";
+import { getAllProducts } from "@/graphql/getAllProducts.query";
+import { getProductById } from "@/graphql/getProductById.query";
 import { GetStaticPaths } from "next";
 import { useRouter } from "next/router";
-import { ApolloQueryResult } from "@apollo/client";
-import ProductList from "../../components/ProductList";
-import Layout from "../../components/Layout";
+import { ApolloQueryResult, useApolloClient } from "@apollo/client";
+import ProductList from "@/components/ProductList";
+import MyLayout from "@/components/MyLayout";
 import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
-import { animations } from "../../lib/animations";
-import MyTransition from "../../components/MyTransition";
+import { animations } from "@/lib/animations";
+import MyTransition from "@/components/MyTransition";
+import ProductCard from "@/components/ProductCard";
+import Link from "next/link";
+import {
+  NextApiRequest,
+  GetStaticPropsContext,
+  GetStaticPathsContext,
+} from "next";
+import apolloClient from "@/http/apollo";
 
 const ProductDetails = ({ product }: { product: Product | null }) => {
   // console.log("product =", product);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [productState, setProductState] = useState(product);
 
   let productsInCart: Product[] = useAppSelector((state) => {
     let foundProducts: Product[] = [];
@@ -36,76 +44,54 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
     return foundProducts;
   });
 
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    router.events.on("routeChangeStart", () => setLoading(true));
-    router.events.on("routeChangeComplete", () => setLoading(false));
-    router.events.on("routeChangeError", () => setLoading(false));
-    return () => {
-      router.events.off("routeChangeStart", () => setLoading(true));
-      router.events.off("routeChangeComplete", () => setLoading(false));
-      router.events.off("routeChangeError", () => setLoading(false));
-    };
-  }, [router.events]);
-
   if (!product) {
     return (
-      <Layout>
+      <MyLayout>
         <h1 className={"text-center"}>No Such Product</h1>
-      </Layout>
+      </MyLayout>
     );
   }
 
   // If the page is not yet generated, this will be displayed initially until getStaticProps() finishes running
   if (router.isFallback) {
     return (
-      <Layout>
+      <MyLayout>
         <h1 className={"text-center"}>Loading...</h1>
-      </Layout>
+      </MyLayout>
     );
   }
 
   return (
-    <Layout>
+    <MyLayout>
       <MyTransition mKey={String(product.id)}>
-        <Card>
-          <Card.Header>
-            <h3>{product.name}</h3>
-          </Card.Header>
-          <Card.Body>
-            <p>{product.description}</p>
-            <p>{product.price}</p>
-            {productsInCart.length === 0 ? (
-              <Button onClick={() => dispatch(addItemToCart(product))}>
-                Add to Cart
-              </Button>
-            ) : (
-              <Stack direction="horizontal" gap={2}>
-                <Button onClick={() => dispatch(addItemToCart(product))}>
-                  <i className="fas fa-plus"></i>
-                </Button>
-                <div>{productsInCart[0]?.quantity}</div>
-                <Button
-                  onClick={() => dispatch(deleteItemFromCart(product))}
-                  variant="danger"
-                >
-                  <i className="fas fa-minus"></i>
-                </Button>
-              </Stack>
-            )}
-          </Card.Body>
-        </Card>
+        <Link href={"/product/1"}>Product 1</Link>
+        <Link href={"/product/2"}>Product 2</Link>
+        <Link href={"/product/3"}>Product 3</Link>
 
-        <ProductList />
+        <ProductCard productInput={productState} />
+        {/*<ProductList />*/}
+        {/*<hr />*/}
+        {/*<ProductCard />*/}
       </MyTransition>
-    </Layout>
+    </MyLayout>
   );
 };
 
 export default ProductDetails;
 
-export async function getStaticProps({ params }: { params: { id: string } }) {
+// {
+//   req,
+//   params,
+// }: {
+//   req: NextApiRequest;
+//   params: { id: string };
+
+export async function getStaticProps(context: GetStaticPropsContext) {
+  console.log("getStaticProps");
   let result: ApolloQueryResult<GetProductByIdQuery> | null = null;
+
+  console.log("context");
+  console.log(context);
 
   try {
     result = await apolloClient.query<
@@ -113,13 +99,13 @@ export async function getStaticProps({ params }: { params: { id: string } }) {
       GetProductByIdQueryVariables
     >({
       query: getProductById,
-      variables: { id: Number(params.id) },
+      variables: { id: Number(context?.params?.id) },
     });
   } catch (err) {
     console.error(err);
   }
 
-  if (result) {
+  if (result && result.data) {
     return {
       props: {
         product: result.data.product,
@@ -135,7 +121,11 @@ export async function getStaticProps({ params }: { params: { id: string } }) {
 }
 
 // export async function getStaticPaths() {
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async (
+  context: GetStaticPathsContext
+) => {
+  console.log("GetStaticPaths");
+  console.log(context);
   const { data } = await apolloClient.query<GetAllProductsQuery>({
     query: getAllProducts,
   });
@@ -150,3 +140,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: true, // Enable statically generating additional pages
   };
 };
+
+// const [loading, setLoading] = useState(false);
+// useEffect(() => {
+//   router.events.on("routeChangeStart", () => setLoading(true));
+//   router.events.on("routeChangeComplete", () => setLoading(false));
+//   router.events.on("routeChangeError", () => setLoading(false));
+//   return () => {
+//     router.events.off("routeChangeStart", () => setLoading(true));
+//     router.events.off("routeChangeComplete", () => setLoading(false));
+//     router.events.off("routeChangeError", () => setLoading(false));
+//   };
+// }, [router.events]);

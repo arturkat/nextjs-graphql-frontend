@@ -28,6 +28,14 @@ const MyNavbar = (props: any) => {
             <Nav.Link>About</Nav.Link>
           </Link>
 
+          <Link href={"/profile"} passHref>
+            <Nav.Link>Profile</Nav.Link>
+          </Link>
+
+          <Link href={"/auth"} passHref>
+            <Nav.Link>Auth</Nav.Link>
+          </Link>
+
           <Nav.Link onClick={() => dispatch(toggleCartModal(!isCartOpen))}>
             <i className="fa-solid fa-cart-shopping me-1"></i>
             <span className="me-2">Cart</span>

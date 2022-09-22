@@ -1,13 +1,12 @@
 import React from "react";
-import Layout from "@/components/Layout";
+import MyLayout from "@/components/MyLayout";
 import ProductList from "@/components/ProductList";
 
 const About = () => {
   return (
     <>
-      <Layout>
+      <MyLayout>
         <h1>About</h1>
-        <ProductList />
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur
           deleniti ducimus maxime nesciunt, odit porro quos unde vero! Delectus
@@ -18,7 +17,8 @@ const About = () => {
           aut blanditiis consequuntur delectus dicta error nam, omnis placeat
           sint sunt, ullam. Aspernatur ipsum nihil perspiciatis!
         </p>
-      </Layout>
+        <ProductList />
+      </MyLayout>
     </>
   );
 };

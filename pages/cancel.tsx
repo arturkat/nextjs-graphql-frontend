@@ -1,11 +1,11 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
-import Layout from "@/components/Layout";
+import MyLayout from "@/components/MyLayout";
 
 export default function cancel() {
   return (
-    <Layout>
+    <MyLayout>
       <Alert variant="danger">Your payment failed</Alert>
-    </Layout>
+    </MyLayout>
   );
 }
