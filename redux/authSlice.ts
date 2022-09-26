@@ -1,19 +1,16 @@
 import nookies from "nookies";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SignUpInput, SignUpMutation, User } from "@/graphql/types";
+import { User } from "@/graphql/types";
 import AuthService from "@/services/AuthService";
-import { errorToast, setToast, successToast } from "@/redux/toasterSlice";
+import { errorToast, successToast } from "@/redux/toasterSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import { ApolloError, FetchResult } from "@apollo/client";
-// import { ApolloError } from '@apollo/client/errors';
+import apolloClient from "@/http/apollo";
 
 interface IAuthState {
-  isAuth: boolean;
   user: User | null;
 }
 
 const initialState: IAuthState = {
-  isAuth: false,
   user: null,
 };
 
@@ -21,28 +18,17 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth(state, action: PayloadAction<boolean>) {
-      state.isAuth = action.payload;
-    },
     setUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
     },
-    setSignInData(
-      state,
-      action: PayloadAction<{ user: User; isAuth: boolean }>
-    ) {
-      state.user = action.payload.user;
-      state.isAuth = action.payload.isAuth;
-    },
-    setLogOutData(state) {
+    setLogOut(state) {
       state.user = null;
-      state.isAuth = false;
+      apolloClient.clearStore();
     },
   },
 });
 
-export const { setAuth, setUser, setLogOutData, setSignInData } =
-  authSlice.actions;
+export const { setUser, setLogOut } = authSlice.actions;
 
 export default authSlice.reducer;
 
@@ -62,7 +48,7 @@ export const signUpAsync =
       );
       if (signUpResponse.data?.signUp) {
         const { user, accessToken, refreshToken } = signUpResponse.data?.signUp;
-        dispatch(setSignInData({ user: user, isAuth: true }));
+        dispatch(setUser(user));
         setTokens(accessToken, refreshToken);
         successToast("Successful sing up!", dispatch);
         console.log("-> signUpAsync success -", signUpResponse);
@@ -80,7 +66,7 @@ export const signInAsync =
       const signInResponse = await AuthService.signIn(email, password);
       if (signInResponse.data?.signIn) {
         const { user, accessToken, refreshToken } = signInResponse.data?.signIn;
-        dispatch(setSignInData({ user: user, isAuth: true }));
+        dispatch(setUser(user));
         setTokens(accessToken, refreshToken);
         successToast("Successful sing in!", dispatch);
         console.log("-> signUpAsync success -", signInResponse);
@@ -109,24 +95,47 @@ export const logOutAsync =
       if (!hasLoggedOut) {
         errorToast(`Can't log out!`, dispatch);
       }
-      dispatch(setLogOutData());
+      dispatch(setLogOut());
+      setTokens("", "");
     } catch (err: any) {
+      dispatch(setLogOut());
+      setTokens("", "");
       errorToast(err.toString(), dispatch);
       console.log("-> logOutAsync error -", err);
-      dispatch(setLogOutData());
     }
   };
 
 export const checkAuthAsync = () => async (dispatch: AppDispatch) => {
   try {
+    let loggedIn = false;
     const checkAuthResponse = await AuthService.checkAuth();
-    if (checkAuthResponse.data?.checkAuth) {
-      const checkAuth = checkAuthResponse.data?.checkAuth;
-      successToast(`Check auth result: ${checkAuth}`, dispatch);
+    if (checkAuthResponse.data?.checkAuth?.loggedIn) {
+      loggedIn = checkAuthResponse.data?.checkAuth?.loggedIn;
+      successToast(`Check auth result: ${loggedIn}`, dispatch);
       console.log("-> signUpAsync success -", checkAuthResponse);
+    }
+    if (!loggedIn) {
+      errorToast(`You aren't authenticated`, dispatch);
     }
     return checkAuthResponse;
   } catch (err: any) {
+    errorToast(err.toString(), dispatch);
     console.log("-> checkAuthAsync error -", err);
+  }
+};
+
+export const getNewTokensAsync = () => async (dispatch: AppDispatch) => {
+  try {
+    let getNewTokensResponse = await AuthService.getNewTokens();
+    if (getNewTokensResponse?.data?.getNewTokens) {
+      const { accessToken, refreshToken } =
+        getNewTokensResponse?.data?.getNewTokens;
+      setTokens(accessToken, refreshToken);
+      successToast(`Got new tokens`, dispatch);
+      console.log("-> getNewTokensAsync success -", getNewTokensResponse);
+    }
+  } catch (err: any) {
+    errorToast(err.toString(), dispatch);
+    console.log("-> getNewTokensAsync error -", err);
   }
 };

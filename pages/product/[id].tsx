@@ -9,8 +9,8 @@ import {
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hook";
 import { Button, Card, Stack } from "react-bootstrap";
 import { addItemToCart, deleteItemFromCart } from "@/redux/cartSlice";
-import { getAllProducts } from "@/graphql/getAllProducts.query";
-import { getProductById } from "@/graphql/getProductById.query";
+import { GET_ALL_PRODUCTS } from "@/graphql/getAllProducts.query";
+import { GET_PRODUCT_BY_ID } from "@/graphql/getProductById.query";
 import { GetStaticPaths } from "next";
 import { useRouter } from "next/router";
 import { ApolloQueryResult, useApolloClient } from "@apollo/client";
@@ -98,7 +98,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       GetProductByIdQuery,
       GetProductByIdQueryVariables
     >({
-      query: getProductById,
+      query: GET_PRODUCT_BY_ID,
       variables: { id: Number(context?.params?.id) },
     });
   } catch (err) {
@@ -127,7 +127,7 @@ export const getStaticPaths: GetStaticPaths = async (
   console.log("GetStaticPaths");
   console.log(context);
   const { data } = await apolloClient.query<GetAllProductsQuery>({
-    query: getAllProducts,
+    query: GET_ALL_PRODUCTS,
   });
 
   let paths = data.products.map((product) => ({

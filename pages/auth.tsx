@@ -4,6 +4,7 @@ import { Button, Form, Stack } from "react-bootstrap";
 import { useAppDispatch } from "@/hooks/redux.hook";
 import {
   checkAuthAsync,
+  getNewTokensAsync,
   logOutAsync,
   signInAsync,
   signUpAsync,
@@ -37,6 +38,10 @@ const Auth = () => {
 
   function handleSignOut() {
     dispatch(logOutAsync());
+  }
+
+  function handleGetNewTokensAsync() {
+    dispatch(getNewTokensAsync());
   }
 
   return (
@@ -94,13 +99,23 @@ const Auth = () => {
 
         <hr />
 
-        <Button
-          variant="primary"
-          name="checkUserAuth"
-          onClick={handleCheckUserAuth}
-        >
-          Check User Auth
-        </Button>
+        <Stack direction={"horizontal"} gap={2}>
+          <Button
+            variant="primary"
+            name="checkUserAuth"
+            onClick={handleCheckUserAuth}
+          >
+            Check User Auth
+          </Button>
+
+          <Button
+            variant="primary"
+            name="getNewTokens"
+            onClick={handleGetNewTokensAsync}
+          >
+            Get New Tokens
+          </Button>
+        </Stack>
       </Form>
     </MyLayout>
   );

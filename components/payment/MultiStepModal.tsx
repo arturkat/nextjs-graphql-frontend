@@ -8,7 +8,7 @@ import {
 } from "@/graphql/types";
 import { useAppSelector } from "@/hooks/redux.hook";
 import { togglePaymentModal } from "@/redux/paymentModalSlice";
-import { createCheckoutSession } from "@/graphql/createCheckoutSession.mutation";
+import { CREATE_CHECKOUT_SESSION } from "@/graphql/createCheckoutSession.mutation";
 import { useAppDispatch } from "@/hooks/redux.hook";
 import Summary from "./Summary";
 import Address from "./Address";
@@ -33,7 +33,7 @@ export default function MultiStepModal() {
   const [createSession, { data, loading, error }] = useMutation<
     CreateCheckoutSessionMutation,
     CreateCheckoutSessionMutationVariables
-  >(createCheckoutSession, {
+  >(CREATE_CHECKOUT_SESSION, {
     onCompleted: (data) => {
       router.push(data.createCheckoutSession.url);
       dispatch(togglePaymentModal(false));

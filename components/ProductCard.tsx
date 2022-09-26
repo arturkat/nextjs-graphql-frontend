@@ -6,7 +6,7 @@ import {
   Product,
 } from "@/graphql/types";
 import apolloClient from "@/http/apollo";
-import { getProductById } from "@/graphql/getProductById.query";
+import { GET_PRODUCT_BY_ID } from "@/graphql/getProductById.query";
 import { Button, Card, Stack } from "react-bootstrap";
 import { addItemToCart, deleteItemFromCart } from "@/redux/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hook";
@@ -20,7 +20,7 @@ async function getProduct(id: number) {
       GetProductByIdQuery,
       GetProductByIdQueryVariables
     >({
-      query: getProductById,
+      query: GET_PRODUCT_BY_ID,
       variables: { id: Number(id) },
     });
   } catch (err) {

@@ -5,7 +5,7 @@ const slideUp = {
       x: 0,
       y: -50,
       opacity: 0,
-      scale: 0.98,
+      scale: 0.95,
     },
     animate: {
       x: 0,

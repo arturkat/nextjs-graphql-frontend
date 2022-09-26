@@ -1,7 +1,7 @@
 import { ApolloQueryResult, useQuery } from "@apollo/client";
 import type { NextPage } from "next";
 import ProductListItem from "@/components/ProductListItem";
-import { getAllProducts } from "@/graphql/getAllProducts.query";
+import { GET_ALL_PRODUCTS } from "@/graphql/getAllProducts.query";
 import { GetAllProductsQuery, GetProductByIdQuery } from "@/graphql/types";
 import { Col, Container, Row } from "react-bootstrap";
 import apolloClient from "@/http/apollo";
@@ -31,7 +31,7 @@ const ProductList: NextPage = () => {
   useEffect(() => {
     async function loadProducts() {
       const res = await apolloClient.query<GetAllProductsQuery>({
-        query: getAllProducts,
+        query: GET_ALL_PRODUCTS,
       });
       setResult(res);
       // console.log("useEffect ProductList ", result);
